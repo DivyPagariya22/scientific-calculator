@@ -1,16 +1,25 @@
 ---
-- name: Deploy Scientific Calculator
+- name: Pull Docker Image from Docker Hub and Run Calculator
   hosts: localhost
+  remote_user: divy  # Use your username here
+  become: true  # Run as root to have Docker permissions
   tasks:
-    - name: Pull Docker image
+    - name: Pull Docker Image
       docker_image:
-        name: divypagariya/scientific-calculator
+        name: "divypagariya/scientific-calculator"  # Corrected Docker image name
         source: pull
+      register: docker_pull_result
 
-    - name: Run Calculator Container
-      docker_container:
-        name: scientific-calculator
-        image: divypagariya/scientific-calculator:latest
+    - name: Display Docker Pull Result
+      debug:
+        var: docker_pull_result
+
+    - name: Start Docker service
+      service:
+        name: docker
         state: started
-        tty: yes
-        stdin_open: yes
+
+    - name: Run Docker container
+      shell: |
+        docker run -d --name calculator divypagariya/scientific-calculator  # Corrected Docker image name
+        docker exec -it calculator /bin/bash -c 'sed -i "s/\r$//" /app/calculator.sh && /bin/bash /app/calculator.sh'
