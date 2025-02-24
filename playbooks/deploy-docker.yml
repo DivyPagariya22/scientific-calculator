@@ -1,12 +1,12 @@
 ---
-- name: Pull Docker Image from Docker Hub and Run Calculator
+- name: Pull Docker Image from Docker Hub
   hosts: localhost
-  remote_user: divy  # Use your username here
-  become: true  # Run as root to have Docker permissions
+  remote_user: divy
+  become: false
   tasks:
     - name: Pull Docker Image
       docker_image:
-        name: "divypagariya/scientific-calculator"  # Corrected Docker image name
+        name: "divypagariya/scientific-calculator"
         source: pull
       register: docker_pull_result
 
@@ -19,7 +19,5 @@
         name: docker
         state: started
 
-    - name: Run Docker container
-      shell: |
-        docker run -d --name calculator divypagariya/scientific-calculator  # Corrected Docker image name
-        docker exec -it calculator /bin/bash -c 'sed -i "s/\r$//" /app/calculator.sh && /bin/bash /app/calculator.sh'
+    - name: Running container
+      shell: docker run -it -d --name scientific-calculator divypagariya/scientific-calculator
