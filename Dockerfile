@@ -1,4 +1,3 @@
-# Use official Python image as base
 FROM python:3.9-slim
 
 # Set working directory
@@ -7,7 +6,6 @@ WORKDIR /app
 # Copy project files into the container
 COPY . .
 
-# Install dependencies (if any)
 RUN pip install --upgrade pip
 
 # Run unit tests
