@@ -19,6 +19,10 @@
       service:
         name: docker
         state: started
+    
+    - name: Remove existing container if running
+      shell: docker rm -f calculator
+      ignore_errors: yes
 
     - name: Running container
       shell: docker run -it -d --name calculator divypagariya/scientific-calculator
